@@ -1,7 +1,7 @@
-﻿using System.Runtime.InteropServices;
+﻿// using System.Runtime.InteropServices;
 
 
-// 1.
+// // 1.
 
 // System.Console.WriteLine($"Логических процессоров: {Environment.ProcessorCount}");
 // System.Console.WriteLine($"Архитектура процесса: {RuntimeInformation.ProcessArchitecture}");
@@ -9,7 +9,7 @@
 
 
 
-// 2.
+// // 2.
 
 // using System.Diagnostics;
 
@@ -30,3 +30,39 @@
 // System.Console.WriteLine($"Результат: {result}");
 // System.Console.WriteLine("Готово.");
 
+// 3.
+
+using System.Diagnostics;
+
+int threadCount = 12;
+
+System.Console.WriteLine($"Логических процессоров: {threadCount}");
+System.Console.WriteLine($"Потоков запущено: {threadCount}");
+System.Console.WriteLine("Запуск вычислений...");
+
+Thread[] threads = new Thread[threadCount];
+for (int i = 0; i < threadCount; i++)
+{
+    threads[i] = new Thread(() =>
+    {
+       long result = 0;
+       Stopwatch timer = Stopwatch.StartNew();
+
+       while (timer.Elapsed.TotalSeconds < 5)
+        {
+            for (int j = 0; j < 1_000_000; j++)
+            {
+                result += j * j;
+            }
+        } 
+    });
+
+    threads[i].Start();
+}
+
+foreach (Thread thread in threads)
+{
+    thread.Join();
+}
+
+System.Console.WriteLine("Все потоки завершили работу.");
